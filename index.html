@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CategoryForge-Onboard — Trosort</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0e1518;
+  --bg-2:#13202a;
+  --bg-3:#19303a;
+  --line:#2a4350;
+  --line-2:#395764;
+  --ink:#e8f1f2;
+  --ink-2:#90a8ad;
+  --ink-3:#5d7a82;
+  --teal:#22d3ee;
+  --teal-d:#0ea5c4;
+  --coral:#fb7185;
+  --gold:#f4cf65;
+  --green:#34d399;
+  --red:#f87171;
+  --grad: linear-gradient(135deg, #22d3ee 0%, #34d399 50%, #f4cf65 100%);
+  --grad-coral: linear-gradient(135deg, #fb7185 0%, #f4cf65 100%);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);min-height:100vh}
+body{
+  background-image:
+    radial-gradient(ellipse 60% 40% at 100% 0%, rgba(34,211,238,.10), transparent 60%),
+    radial-gradient(ellipse 50% 40% at 0% 100%, rgba(251,113,133,.08), transparent 60%),
+    radial-gradient(ellipse at 50% 50%, rgba(244,207,101,.04), transparent 70%);
+}
+.mono{font-family:'DM Mono',monospace}
+
+/* Header */
+.hdr{
+  border-bottom:1px solid var(--line);padding:.85rem 2rem;
+  position:sticky;top:0;z-index:50;
+  background:rgba(14,21,24,.85);backdrop-filter:blur(16px);
+}
+.hdr-row{max-width:1500px;margin:0 auto;display:flex;justify-content:space-between;align-items:center}
+.brand{display:flex;align-items:center;gap:.85rem}
+.bm{
+  width:46px;height:46px;border-radius:13px;
+  background:var(--grad);
+  display:grid;place-items:center;font-size:1.4rem;
+  position:relative;color:#0e1518;
+}
+.bm::after{content:'';position:absolute;inset:-2px;border-radius:15px;background:var(--grad);filter:blur(11px);opacity:.45;z-index:-1}
+.bn{font-size:1.4rem;font-weight:800;letter-spacing:-.025em;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.bs{font-size:.6rem;color:var(--ink-2);text-transform:uppercase;letter-spacing:3px;font-family:'DM Mono',monospace;margin-top:1px}
+.client-pill{
+  background:var(--bg-3);border:1px solid var(--line);border-radius:999px;
+  padding:.45rem .9rem;font-family:'DM Mono',monospace;font-size:.72rem;
+  color:var(--ink-2);display:flex;align-items:center;gap:.55rem;
+}
+.client-pill .av{width:22px;height:22px;border-radius:50%;background:var(--grad-coral);display:grid;place-items:center;font-size:.65rem;color:#0e1518;font-weight:700}
+
+main{max-width:1500px;margin:0 auto;padding:1.5rem 2rem 3rem}
+
+.hero{margin-bottom:1.5rem}
+.hero h1{font-size:2.2rem;font-weight:800;letter-spacing:-.025em;margin-bottom:.4rem}
+.hero h1 .alt{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{color:var(--ink-2);font-size:1rem;max-width:780px}
+
+/* Stepper */
+.stepper{
+  background:var(--bg-2);border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;
+  display:flex;align-items:center;gap:.8rem;margin-bottom:1.5rem;overflow-x:auto;
+}
+.step{display:flex;align-items:center;gap:.7rem;flex-shrink:0;cursor:pointer;transition:all .2s;opacity:.5}
+.step.active{opacity:1}
+.step.done{opacity:1}
+.step:hover{opacity:.9}
+.step-n{
+  width:34px;height:34px;border-radius:11px;
+  background:var(--bg-3);border:1.5px solid var(--line-2);
+  display:grid;place-items:center;font-weight:700;font-size:.85rem;color:var(--ink-2);
+  transition:all .25s;
+}
+.step.active .step-n{background:var(--grad);color:#0e1518;border-color:transparent;box-shadow:0 0 18px rgba(34,211,238,.3)}
+.step.done .step-n{background:var(--green);color:#0e1518;border-color:transparent}
+.step-l{display:flex;flex-direction:column;gap:1px}
+.step-t{font-size:.78rem;font-weight:600}
+.step-d{font-size:.62rem;color:var(--ink-3);font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:1px}
+.step-arr{color:var(--ink-3);margin:0 .25rem;font-size:.9rem}
+
+/* Stage container */
+.stage{background:var(--bg-2);border:1px solid var(--line);border-radius:18px;overflow:hidden;min-height:520px;display:flex;flex-direction:column}
+.stage-h{padding:1.1rem 1.5rem;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;background:linear-gradient(180deg,rgba(25,48,58,.4),transparent)}
+.stage-t{font-size:1rem;font-weight:700;display:flex;align-items:center;gap:.55rem}
+.stage-tag{font-family:'DM Mono',monospace;font-size:.7rem;color:var(--ink-3)}
+.stage-b{padding:1.5rem;flex:1}
+
+/* Step 1: drop zone */
+.drop{
+  border:2px dashed var(--line-2);border-radius:14px;padding:3rem 2rem;
+  text-align:center;transition:all .25s;cursor:pointer;
+  background:linear-gradient(180deg,rgba(25,48,58,.3),transparent);
+}
+.drop:hover, .drop.over{border-color:var(--teal);background:rgba(34,211,238,.05)}
+.drop-icon{font-size:3rem;margin-bottom:.8rem;display:inline-block;animation:float 3s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.drop h3{font-size:1.1rem;font-weight:700;margin-bottom:.4rem}
+.drop p{color:var(--ink-2);font-size:.85rem;margin-bottom:1rem}
+.drop .or{font-size:.7rem;color:var(--ink-3);margin:.6rem 0;font-family:'DM Mono',monospace}
+.example-row{display:flex;justify-content:center;gap:.45rem;flex-wrap:wrap;margin-top:1rem}
+.example-btn{
+  background:var(--bg-3);border:1px solid var(--line);border-radius:8px;
+  padding:.5rem .85rem;font-family:'DM Mono',monospace;font-size:.7rem;
+  color:var(--ink-2);cursor:pointer;transition:all .2s;
+}
+.example-btn:hover{border-color:var(--teal);color:var(--teal)}
+
+.parse-progress{margin-top:1.5rem;padding:1rem 1.2rem;background:var(--bg-3);border-radius:10px;display:none}
+.parse-progress.show{display:block;animation:fadeIn .3s}
+@keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+.parse-row{display:flex;justify-content:space-between;font-size:.75rem;margin-bottom:.4rem;font-family:'DM Mono',monospace;color:var(--ink-2)}
+.parse-row .v{color:var(--teal)}
+.parse-bar{height:6px;background:var(--bg);border-radius:3px;overflow:hidden;margin-top:.6rem}
+.parse-bar > i{display:block;height:100%;background:var(--grad);width:0;transition:width .8s}
+
+/* Step 2: mapping table */
+.map-info{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:.7rem;margin-bottom:1.2rem;
+}
+@media(max-width:780px){.map-info{grid-template-columns:repeat(2,1fr)}}
+.info-card{background:var(--bg-3);border:1px solid var(--line);border-radius:11px;padding:.85rem 1rem}
+.info-card .l{font-size:.6rem;color:var(--ink-3);text-transform:uppercase;letter-spacing:1.4px;margin-bottom:.35rem;font-family:'DM Mono',monospace}
+.info-card .v{font-size:1.4rem;font-weight:700;font-family:'DM Mono',monospace}
+.info-card.ok .v{color:var(--green)}
+.info-card.warn .v{color:var(--gold)}
+.info-card.crit .v{color:var(--coral)}
+.info-card .v small{font-size:.7rem;color:var(--ink-3);font-weight:400;margin-left:.2rem}
+
+.map-table{
+  background:var(--bg-3);border-radius:12px;overflow:hidden;border:1px solid var(--line);
+}
+.map-head{
+  display:grid;grid-template-columns:1.5fr 60px 2fr 90px 80px;gap:.7rem;
+  padding:.85rem 1.1rem;background:var(--bg-2);font-size:.62rem;font-weight:700;
+  text-transform:uppercase;letter-spacing:1.5px;color:var(--ink-3);
+  border-bottom:1px solid var(--line);font-family:'DM Mono',monospace;
+}
+.map-row{
+  display:grid;grid-template-columns:1.5fr 60px 2fr 90px 80px;gap:.7rem;
+  padding:.75rem 1.1rem;border-bottom:1px solid var(--line);font-size:.82rem;
+  align-items:center;transition:background .15s;
+}
+.map-row:last-child{border-bottom:none}
+.map-row:hover{background:var(--bg-2)}
+.map-from{display:flex;align-items:center;gap:.55rem;font-weight:500}
+.map-from .icon{width:26px;height:26px;background:var(--bg);border-radius:6px;display:grid;place-items:center;font-size:.85rem;flex-shrink:0}
+.map-arrow{color:var(--ink-3);text-align:center;font-family:'DM Mono',monospace}
+.map-to{color:var(--teal);font-weight:500;display:flex;align-items:center;gap:.4rem}
+.map-to .conf{font-family:'DM Mono',monospace;font-size:.65rem;color:var(--ink-3);font-weight:400}
+.map-conf{font-family:'DM Mono',monospace;font-size:.78rem;text-align:right}
+.map-conf.high{color:var(--green)}
+.map-conf.med{color:var(--gold)}
+.map-conf.low{color:var(--coral)}
+.map-act{
+  background:transparent;border:1px solid var(--line);border-radius:6px;
+  padding:.3rem .5rem;font-family:'DM Mono',monospace;font-size:.62rem;
+  color:var(--ink-2);cursor:pointer;transition:all .15s;
+}
+.map-act:hover{border-color:var(--teal);color:var(--teal)}
+.map-row.unmapped .map-to{color:var(--coral);font-style:italic}
+.map-row.unmapped .map-arrow{color:var(--coral)}
+
+/* Step 3: readiness */
+.ready-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:1rem;margin-bottom:1.2rem}
+@media(max-width:1100px){.ready-grid{grid-template-columns:1fr}}
+.cat-list{background:var(--bg-3);border-radius:12px;border:1px solid var(--line);overflow:hidden;max-height:430px;overflow-y:auto}
+.cat-row{padding:.85rem 1.1rem;border-bottom:1px solid var(--line);display:grid;grid-template-columns:1fr 100px 80px;gap:1rem;align-items:center}
+.cat-row:last-child{border-bottom:none}
+.cat-name{font-size:.84rem;font-weight:600;display:flex;align-items:center;gap:.55rem}
+.cat-name .ic{font-size:.95rem}
+.cat-meta{font-size:.62rem;color:var(--ink-3);font-family:'DM Mono',monospace;margin-top:.15rem}
+.cat-bar{height:6px;background:var(--bg);border-radius:3px;overflow:hidden;position:relative}
+.cat-bar > i{display:block;height:100%;border-radius:3px;width:0;transition:width 1s cubic-bezier(.2,.8,.2,1)}
+.cat-bar.ok > i{background:var(--green)}
+.cat-bar.warn > i{background:var(--gold)}
+.cat-bar.crit > i{background:var(--coral)}
+.cat-pct{font-family:'DM Mono',monospace;font-size:.78rem;text-align:right}
+.cat-pct.ok{color:var(--green)} .cat-pct.warn{color:var(--gold)} .cat-pct.crit{color:var(--coral)}
+
+.gauge-card{background:var(--bg-3);border-radius:12px;border:1px solid var(--line);padding:1.1rem;display:flex;flex-direction:column;gap:1rem}
+.gauge{position:relative;display:flex;align-items:center;justify-content:center;height:160px}
+.gauge-svg{width:200px;height:120px}
+.gauge-text{position:absolute;text-align:center;top:50%;left:50%;transform:translate(-50%,-10%)}
+.gauge-v{font-size:2rem;font-weight:800;font-family:'DM Mono',monospace;color:var(--green)}
+.gauge-l{font-size:.65rem;color:var(--ink-3);text-transform:uppercase;letter-spacing:1.5px;font-family:'DM Mono',monospace}
+.recs{display:flex;flex-direction:column;gap:.55rem}
+.rec{
+  display:flex;align-items:flex-start;gap:.6rem;padding:.7rem;background:var(--bg-2);border-radius:9px;
+  border-left:3px solid var(--gold);font-size:.76rem;line-height:1.4;
+}
+.rec.crit{border-left-color:var(--coral)}
+.rec.ok{border-left-color:var(--green)}
+.rec .ri{font-size:.95rem;flex-shrink:0}
+.rec .rt{font-weight:600;margin-bottom:.15rem}
+.rec .rm{color:var(--ink-2);font-size:.7rem;font-family:'DM Mono',monospace}
+
+/* Step 4: config preview */
+.config-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+@media(max-width:1000px){.config-grid{grid-template-columns:1fr}}
+.config-card{background:var(--bg-3);border:1px solid var(--line);border-radius:12px;padding:1.1rem}
+.config-card h4{font-size:.85rem;font-weight:700;margin-bottom:.7rem;display:flex;justify-content:space-between;align-items:center}
+.config-card h4 .copy{font-family:'DM Mono',monospace;font-size:.65rem;color:var(--ink-3);cursor:pointer;background:transparent;border:1px solid var(--line);padding:.25rem .5rem;border-radius:5px;transition:all .15s}
+.config-card h4 .copy:hover{color:var(--teal);border-color:var(--teal)}
+.config-pre{
+  background:var(--bg);border-radius:9px;padding:1rem;
+  font-family:'DM Mono',monospace;font-size:.72rem;line-height:1.6;
+  color:var(--ink-2);overflow-x:auto;max-height:340px;overflow-y:auto;
+}
+.config-pre .k{color:var(--teal)}
+.config-pre .v{color:var(--gold)}
+.config-pre .c{color:var(--ink-3);font-style:italic}
+.config-pre .s{color:var(--coral)}
+
+.deploy-pane{
+  background:linear-gradient(135deg,rgba(34,211,238,.08),rgba(52,211,153,.06));
+  border:1px solid var(--teal);border-radius:14px;padding:1.5rem;text-align:center;
+}
+.deploy-pane h3{font-size:1.2rem;font-weight:800;margin-bottom:.5rem;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.deploy-pane p{color:var(--ink-2);font-size:.85rem;margin-bottom:1.2rem;max-width:520px;margin-left:auto;margin-right:auto}
+.deploy-meta{display:flex;justify-content:center;gap:1.5rem;font-family:'DM Mono',monospace;font-size:.7rem;color:var(--ink-3);flex-wrap:wrap}
+.deploy-meta div{display:flex;align-items:center;gap:.4rem}
+.deploy-meta .ok{color:var(--green)}
+
+/* Bottom bar */
+.bar{
+  display:flex;justify-content:space-between;align-items:center;
+  margin-top:1.25rem;padding:1rem 1.4rem;
+  background:var(--bg-2);border:1px solid var(--line);border-radius:14px;
+}
+.bar-info{font-size:.78rem;color:var(--ink-2)}
+.bar-info b{color:var(--ink)}
+.bar-btns{display:flex;gap:.5rem}
+.btn{
+  background:var(--bg-3);border:1px solid var(--line);border-radius:10px;
+  padding:.65rem 1.2rem;font-family:'DM Sans',sans-serif;font-weight:600;font-size:.82rem;
+  color:var(--ink);cursor:pointer;transition:all .2s;
+  display:flex;align-items:center;gap:.4rem;
+}
+.btn:hover{border-color:var(--teal);color:var(--teal)}
+.btn.primary{background:var(--grad);color:#0e1518;border-color:transparent}
+.btn.primary:hover{transform:translateY(-1px);filter:brightness(1.08);color:#0e1518}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.btn:disabled:hover{border-color:var(--line);color:var(--ink);transform:none;filter:none}
+
+/* Toast */
+.toast{position:fixed;bottom:1.25rem;right:1.25rem;background:var(--bg-2);border:1px solid var(--line);border-radius:12px;padding:.8rem 1.1rem;display:flex;align-items:center;gap:.7rem;transform:translateY(80px);opacity:0;transition:all .35s;z-index:100;box-shadow:0 18px 50px rgba(0,0,0,.5);font-size:.82rem}
+.toast.show{transform:translateY(0);opacity:1}
+.toast .ti{font-size:1.1rem}
+
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--line);border-radius:3px}
+
+/* Stages */
+.panel{display:none}
+.panel.active{display:block;animation:slideIn .35s ease}
+@keyframes slideIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+</style>
+</head>
+<body>
+
+<header class="hdr">
+  <div class="hdr-row">
+    <div class="brand">
+      <div class="bm">🧰</div>
+      <div>
+        <div class="bn">CategoryForge·Onboard</div>
+        <div class="bs">Trosort • Customer Onboarding Console</div>
+      </div>
+    </div>
+    <div class="client-pill">
+      <span class="av">RT</span>
+      <span>Onboarding: <b style="color:var(--ink)">RetextilGent</b> · Belgium</span>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <div class="hero">
+    <h1>From client CSV to <span class="alt">go-live</span> in 4 steps</h1>
+    <p>Ingest a client's existing sorting rules, auto-map them to SortMate's 450-category taxonomy, predict per-category accuracy with confidence intervals, and generate the deployment config — before the first garment hits the conveyor.</p>
+  </div>
+
+  <!-- Stepper -->
+  <div class="stepper" id="stepper">
+    <div class="step active" data-s="0"><div class="step-n">1</div><div class="step-l"><div class="step-t">Upload Rules</div><div class="step-d">CSV / XLSX</div></div></div>
+    <div class="step-arr">→</div>
+    <div class="step" data-s="1"><div class="step-n">2</div><div class="step-l"><div class="step-t">Map Taxonomy</div><div class="step-d">450 categories</div></div></div>
+    <div class="step-arr">→</div>
+    <div class="step" data-s="2"><div class="step-n">3</div><div class="step-l"><div class="step-t">Validate Readiness</div><div class="step-d">accuracy + gaps</div></div></div>
+    <div class="step-arr">→</div>
+    <div class="step" data-s="3"><div class="step-n">4</div><div class="step-l"><div class="step-t">Deploy</div><div class="step-d">YAML config</div></div></div>
+  </div>
+
+  <!-- Stage -->
+  <div class="stage">
+
+    <!-- PANEL 1: Upload -->
+    <div class="panel active" id="p0">
+      <div class="stage-h">
+        <span class="stage-t">📥 Step 1 — Upload existing sorting rules</span>
+        <span class="stage-tag">accepted: .csv .xlsx .json</span>
+      </div>
+      <div class="stage-b">
+        <div class="drop" id="drop">
+          <div class="drop-icon">📂</div>
+          <h3>Drop your sorting rules file here</h3>
+          <p>We'll parse your existing categories, brand allowlists, defect grades, and routing rules — usually whatever your warehouse team currently uses in Excel.</p>
+          <div class="or">— or pick a sample —</div>
+          <div class="example-row">
+            <button class="example-btn" onclick="loadSample('retextilgent')">retextilgent_rules_v3.csv</button>
+            <button class="example-btn" onclick="loadSample('texaid')">texaid_sorting_2024.xlsx</button>
+            <button class="example-btn" onclick="loadSample('ecotextile')">ecotextile_categories.json</button>
+          </div>
+        </div>
+
+        <div class="parse-progress" id="parseProgress">
+          <div class="parse-row"><span>📄 File</span><span class="v" id="parseFile">—</span></div>
+          <div class="parse-row"><span>📊 Rows parsed</span><span class="v" id="parseRows">0</span></div>
+          <div class="parse-row"><span>🏷️ Categories detected</span><span class="v" id="parseCats">0</span></div>
+          <div class="parse-row"><span>✅ Valid mappings</span><span class="v" id="parseValid">0</span></div>
+          <div class="parse-bar"><i id="parseBar"></i></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PANEL 2: Mapping -->
+    <div class="panel" id="p1">
+      <div class="stage-h">
+        <span class="stage-t">🧭 Step 2 — Map to SortMate taxonomy</span>
+        <span class="stage-tag" id="mapStat">— mappings</span>
+      </div>
+      <div class="stage-b">
+        <div class="map-info">
+          <div class="info-card ok"><div class="l">Auto-mapped (≥0.85)</div><div class="v" id="autoMapVal">—</div></div>
+          <div class="info-card warn"><div class="l">Needs review (0.6–0.85)</div><div class="v" id="reviewVal">—</div></div>
+          <div class="info-card crit"><div class="l">Unmapped</div><div class="v" id="unmapVal">—</div></div>
+          <div class="info-card"><div class="l">Coverage</div><div class="v" id="covVal">—</div></div>
+        </div>
+        <div class="map-table">
+          <div class="map-head">
+            <div>Client category</div>
+            <div></div>
+            <div>SortMate taxonomy</div>
+            <div>Confidence</div>
+            <div></div>
+          </div>
+          <div id="mapRows"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PANEL 3: Readiness -->
+    <div class="panel" id="p2">
+      <div class="stage-h">
+        <span class="stage-t">📊 Step 3 — Predict go-live readiness</span>
+        <span class="stage-tag">per-category accuracy + sample-count gaps</span>
+      </div>
+      <div class="stage-b">
+        <div class="ready-grid">
+          <div>
+            <div class="cat-list" id="catList"></div>
+          </div>
+          <div class="gauge-card">
+            <div class="gauge">
+              <svg class="gauge-svg" viewBox="0 0 200 120">
+                <defs>
+                  <linearGradient id="gg" x1="0" y1="0" x2="1" y2="0">
+                    <stop offset="0%" stop-color="#34d399"/>
+                    <stop offset="50%" stop-color="#22d3ee"/>
+                    <stop offset="100%" stop-color="#f4cf65"/>
+                  </linearGradient>
+                </defs>
+                <path d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="#19303a" stroke-width="14" stroke-linecap="round"/>
+                <path id="gaugePath" d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="url(#gg)" stroke-width="14" stroke-linecap="round" stroke-dasharray="251" stroke-dashoffset="251" style="transition:stroke-dashoffset 1.4s cubic-bezier(.2,.8,.2,1)"/>
+              </svg>
+              <div class="gauge-text">
+                <div class="gauge-v" id="gaugeVal">—</div>
+                <div class="gauge-l">Go-Live Ready</div>
+              </div>
+            </div>
+            <div class="recs" id="recList"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PANEL 4: Deploy -->
+    <div class="panel" id="p3">
+      <div class="stage-h">
+        <span class="stage-t">🚀 Step 4 — Deployment config</span>
+        <span class="stage-tag">SortMate · v3.4 firmware compatible</span>
+      </div>
+      <div class="stage-b">
+        <div class="deploy-pane">
+          <h3>✨ Configuration ready for deployment</h3>
+          <p>21 categories mapped · 4 needs fine-tuning · estimated production accuracy 88.4% · ready to push to RetextilGent's SortMate at site BE-GENT-01.</p>
+          <div class="deploy-meta">
+            <div><span class="ok">●</span> CV models pinned</div>
+            <div><span class="ok">●</span> NIR baseline set</div>
+            <div><span class="ok">●</span> Routing rules validated</div>
+            <div><span class="ok">●</span> Fallback policy active</div>
+          </div>
+        </div>
+
+        <div class="config-grid" style="margin-top:1.25rem">
+          <div class="config-card">
+            <h4>sortmate_config.yaml <button class="copy" onclick="copyTxt('yaml')">Copy</button></h4>
+            <pre class="config-pre" id="yamlPre"></pre>
+          </div>
+          <div class="config-card">
+            <h4>routing_rules.json <button class="copy" onclick="copyTxt('json')">Copy</button></h4>
+            <pre class="config-pre" id="jsonPre"></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Bottom action bar -->
+  <div class="bar">
+    <div class="bar-info" id="barInfo">Step <b>1</b> of 4 — Upload your client's sorting rules to begin</div>
+    <div class="bar-btns">
+      <button class="btn" id="prevBtn" onclick="goPrev()" disabled>← Back</button>
+      <button class="btn primary" id="nextBtn" onclick="goNext()" disabled>Next →</button>
+    </div>
+  </div>
+
+</main>
+
+<div class="toast" id="toast"><span class="ti">✅</span><span id="toastMsg">—</span></div>
+
+<script>
+// ===== Sample data =====
+const SAMPLES = {
+  retextilgent: {
+    file: 'retextilgent_rules_v3.csv',
+    rows: 1284,
+    cats: 27,
+    valid: 23,
+    coverage: 92,
+    mappings: [
+      {from:'Jeans Homme A',ic:'👖',to:'Bottoms › Denim › Men · Grade A',conf:0.96},
+      {from:'Jeans Homme B',ic:'👖',to:'Bottoms › Denim › Men · Grade B',conf:0.95},
+      {from:'T-shirts Femme',ic:'👚',to:'Tops › Tee › Women',conf:0.93},
+      {from:'Pulls laine',ic:'🧶',to:'Knits › Wool › Unisex',conf:0.91},
+      {from:'Vestes de pluie',ic:'🧥',to:'Outerwear › Rainwear',conf:0.88},
+      {from:'Chemises business',ic:'👔',to:'Tops › Shirt › Business',conf:0.87},
+      {from:'Robes été',ic:'👗',to:'Dresses › Summer',conf:0.86},
+      {from:'Vêtements bébé',ic:'🧸',to:'Kids › 0-2y · Mixed',conf:0.79},
+      {from:'Tenues de sport',ic:'🩳',to:'Activewear › Mixed',conf:0.74},
+      {from:'Tissus damaged',ic:'⛔',to:'Recycle › Fiber feedstock',conf:0.71},
+      {from:'Categorie X-7',ic:'❓',to:'(no confident match)',conf:0.42,unmapped:true},
+      {from:'Stock special A',ic:'❓',to:'(no confident match)',conf:0.31,unmapped:true},
+    ],
+    catReadiness:[
+      {n:'Bottoms › Denim › Men',ic:'👖',acc:0.94,n_train:8420,status:'ok'},
+      {n:'Tops › Tee › Women',ic:'👚',acc:0.93,n_train:11200,status:'ok'},
+      {n:'Knits › Wool › Unisex',ic:'🧶',acc:0.91,n_train:4310,status:'ok'},
+      {n:'Outerwear › Rainwear',ic:'🧥',acc:0.89,n_train:2840,status:'ok'},
+      {n:'Tops › Shirt › Business',ic:'👔',acc:0.87,n_train:3960,status:'ok'},
+      {n:'Dresses › Summer',ic:'👗',acc:0.85,n_train:2150,status:'ok'},
+      {n:'Activewear › Mixed',ic:'🩳',acc:0.79,n_train:1240,status:'warn'},
+      {n:'Kids › 0-2y · Mixed',ic:'🧸',acc:0.74,n_train:680,status:'warn'},
+      {n:'Bottoms › Denim › Women',ic:'👖',acc:0.71,n_train:520,status:'warn'},
+      {n:'Recycle › Fiber feedstock',ic:'♻️',acc:0.66,n_train:380,status:'crit'},
+      {n:'Vintage › Pre-2000',ic:'📻',acc:0.58,n_train:120,status:'crit'},
+    ],
+    overall: 88,
+    recs:[
+      {k:'crit',i:'⛔',t:'Add 250+ samples for Recycle category',m:'currently 380 samples · target 800 for prod-grade F1'},
+      {k:'warn',i:'⚠',t:'Activewear class overlaps with Tops',m:'consider merging or adding 400 boundary samples'},
+      {k:'ok',i:'✓',t:'Top-5 categories ready for go-live',m:'estimated F1 ≥ 0.89 each · within SLA'},
+      {k:'ok',i:'✓',t:'NIR fiber model fits client mix',m:'cotton-heavy stream matches base distribution'},
+    ]
+  },
+  texaid: {
+    file: 'texaid_sorting_2024.xlsx',
+    rows: 2104,
+    cats: 41,
+    valid: 36,
+    coverage: 88,
+    mappings: [
+      {from:'Damen Oberteile',ic:'👚',to:'Tops › All › Women',conf:0.95},
+      {from:'Herren Hosen',ic:'👖',to:'Bottoms › Pants › Men',conf:0.94},
+      {from:'Wolle/Strick',ic:'🧶',to:'Knits › Wool › Unisex',conf:0.92},
+      {from:'Berufskleidung',ic:'🦺',to:'Workwear › Industrial',conf:0.89},
+      {from:'Outdoor-Jacken',ic:'🧥',to:'Outerwear › Technical',conf:0.86},
+      {from:'Trachten',ic:'❓',to:'(regional · no match)',conf:0.38,unmapped:true},
+      {from:'Sondersortierung',ic:'❓',to:'(custom rule · no match)',conf:0.29,unmapped:true},
+    ],
+    catReadiness:[
+      {n:'Tops › All › Women',ic:'👚',acc:0.95,n_train:14200,status:'ok'},
+      {n:'Bottoms › Pants › Men',ic:'👖',acc:0.93,n_train:9800,status:'ok'},
+      {n:'Knits › Wool › Unisex',ic:'🧶',acc:0.91,n_train:5640,status:'ok'},
+      {n:'Workwear › Industrial',ic:'🦺',acc:0.86,n_train:1820,status:'ok'},
+      {n:'Outerwear › Technical',ic:'🧥',acc:0.83,n_train:2210,status:'warn'},
+      {n:'Regional › Trachten',ic:'👘',acc:0.42,n_train:90,status:'crit'},
+    ],
+    overall: 84,
+    recs:[
+      {k:'crit',i:'⛔',t:'Trachten class needs 400+ samples',m:'regional Swiss garment · not in base training set'},
+      {k:'warn',i:'⚠',t:'Outdoor jackets — fabric similarity',m:'add 200 samples to disambiguate from rainwear'},
+      {k:'ok',i:'✓',t:'Workwear ready · F1 0.86',m:'matches Texaid B2B contract specs'},
+    ]
+  },
+  ecotextile: {
+    file: 'ecotextile_categories.json',
+    rows: 712,
+    cats: 18,
+    valid: 12,
+    coverage: 67,
+    mappings: [
+      {from:'Fast fashion tops',ic:'👕',to:'Tops › Tee › Mixed',conf:0.88},
+      {from:'Influencer brands',ic:'❓',to:'(emerging · partial match)',conf:0.61,unmapped:false},
+      {from:'Shein/Temu hauls',ic:'❓',to:'(no SortMate cluster yet)',conf:0.34,unmapped:true},
+      {from:'Mystery box mix',ic:'❓',to:'(undefined input)',conf:0.18,unmapped:true},
+    ],
+    catReadiness:[
+      {n:'Tops › Tee › Mixed',ic:'👕',acc:0.81,n_train:4200,status:'ok'},
+      {n:'Influencer/social brands',ic:'📱',acc:0.62,n_train:340,status:'crit'},
+      {n:'Fast-fashion ultra-low cost',ic:'🛍️',acc:0.58,n_train:280,status:'crit'},
+      {n:'Mystery box (heterogeneous)',ic:'🎁',acc:0.41,n_train:80,status:'crit'},
+    ],
+    overall: 64,
+    recs:[
+      {k:'crit',i:'⛔',t:'EcoTextile stream is 38% out-of-distribution',m:'recommend 4-week data collection + retraining before go-live'},
+      {k:'crit',i:'⛔',t:'Active learning loop required from day 1',m:'budget for ~2k labels/week to close gap'},
+      {k:'warn',i:'⚠',t:'Hold deployment to soft-launch only',m:'process at 30% throughput until OOD rate < 5%'},
+    ]
+  },
+};
+
+let stage = 0;
+let currentSample = null;
+
+// ===== Stepper navigation =====
+function goTo(s){
+  stage = s;
+  document.querySelectorAll('.step').forEach((el,i)=>{
+    el.classList.toggle('active', i===s);
+    el.classList.toggle('done', i<s);
+  });
+  document.querySelectorAll('.panel').forEach((el,i)=>{
+    el.classList.toggle('active', i===s);
+  });
+  document.getElementById('prevBtn').disabled = (s===0);
+  const next = document.getElementById('nextBtn');
+  if(s===3){next.textContent='✓ Push to SortMate';next.disabled=false}
+  else if(s===0 && !currentSample){next.disabled=true;next.textContent='Next →'}
+  else {next.disabled=false;next.textContent='Next →'}
+
+  const labels=[
+    'Step <b>1</b> of 4 — Upload your client\'s sorting rules to begin',
+    'Step <b>2</b> of 4 — Review and confirm category mappings',
+    'Step <b>3</b> of 4 — Validate per-category accuracy and address gaps',
+    'Step <b>4</b> of 4 — Review final config and deploy to SortMate'
+  ];
+  document.getElementById('barInfo').innerHTML = labels[s];
+
+  if(s===2 && currentSample){renderReadiness(currentSample)}
+  if(s===3 && currentSample){renderConfig(currentSample)}
+}
+function goNext(){
+  if(stage===3){
+    toast('🚀 Pushed to SortMate BE-GENT-01 · firmware v3.4');
+    return;
+  }
+  goTo(stage+1);
+}
+function goPrev(){if(stage>0)goTo(stage-1)}
+document.querySelectorAll('.step').forEach(s=>{
+  s.onclick = ()=>{
+    const target = parseInt(s.dataset.s);
+    // only allow forward if sample loaded
+    if(target>0 && !currentSample){toast('Upload a sample first');return}
+    goTo(target);
+  };
+});
+
+// ===== Step 1: load sample =====
+function loadSample(key){
+  currentSample = SAMPLES[key];
+  document.getElementById('parseProgress').classList.add('show');
+  const pf = document.getElementById('parseFile');
+  const pr = document.getElementById('parseRows');
+  const pc = document.getElementById('parseCats');
+  const pv = document.getElementById('parseValid');
+  const pb = document.getElementById('parseBar');
+  pf.textContent = currentSample.file;
+  pr.textContent='0';pc.textContent='0';pv.textContent='0';pb.style.width='0%';
+
+  let p=0;
+  const t=setInterval(()=>{
+    p+=Math.random()*15+8;
+    if(p>=100){p=100;clearInterval(t);
+      pr.textContent = currentSample.rows.toLocaleString();
+      pc.textContent = currentSample.cats;
+      pv.textContent = currentSample.valid;
+      document.getElementById('nextBtn').disabled=false;
+      toast(`✓ Parsed ${currentSample.rows} rows · ${currentSample.cats} categories detected`);
+      renderMapping(currentSample);
+    } else {
+      pr.textContent = Math.round((p/100)*currentSample.rows).toLocaleString();
+      pc.textContent = Math.round((p/100)*currentSample.cats);
+      pv.textContent = Math.round((p/100)*currentSample.valid);
+    }
+    pb.style.width=p+'%';
+  },150);
+}
+
+// ===== Step 2: render mapping table =====
+function renderMapping(s){
+  const auto = s.mappings.filter(m=>m.conf>=0.85).length;
+  const review = s.mappings.filter(m=>m.conf<0.85 && m.conf>=0.6).length;
+  const unmap = s.mappings.filter(m=>m.conf<0.6).length;
+  document.getElementById('autoMapVal').textContent = auto;
+  document.getElementById('reviewVal').textContent = review;
+  document.getElementById('unmapVal').textContent = unmap;
+  document.getElementById('covVal').innerHTML = s.coverage+'<small>%</small>';
+  document.getElementById('mapStat').textContent = `${s.mappings.length} mappings · ${s.coverage}% coverage`;
+
+  const root = document.getElementById('mapRows');
+  root.innerHTML='';
+  s.mappings.forEach(m=>{
+    const cClass = m.conf>=0.85?'high':(m.conf>=0.6?'med':'low');
+    const row = document.createElement('div');
+    row.className='map-row' + (m.unmapped?' unmapped':'');
+    row.innerHTML=`
+      <div class="map-from"><div class="icon">${m.ic}</div>${m.from}</div>
+      <div class="map-arrow">→</div>
+      <div class="map-to">${m.to}</div>
+      <div class="map-conf ${cClass}">${(m.conf*100).toFixed(0)}%</div>
+      <button class="map-act" onclick="toast('Edit: ${m.from.replace(/'/g,'')}')">${m.unmapped?'+ Map':'Edit'}</button>
+    `;
+    root.appendChild(row);
+  });
+}
+
+// ===== Step 3: render readiness =====
+function renderReadiness(s){
+  const list = document.getElementById('catList');
+  list.innerHTML='';
+  s.catReadiness.forEach(c=>{
+    const row = document.createElement('div');
+    row.className = 'cat-row';
+    row.innerHTML=`
+      <div>
+        <div class="cat-name"><span class="ic">${c.ic}</span>${c.n}</div>
+        <div class="cat-meta">${c.n_train.toLocaleString()} training samples · est. F1 ${c.acc.toFixed(2)}</div>
+      </div>
+      <div class="cat-bar ${c.status}"><i></i></div>
+      <div class="cat-pct ${c.status}">${(c.acc*100).toFixed(0)}%</div>
+    `;
+    list.appendChild(row);
+  });
+  setTimeout(()=>{
+    [...list.querySelectorAll('.cat-bar > i')].forEach((i,k)=>{
+      i.style.width = (s.catReadiness[k].acc*100)+'%';
+    });
+  },80);
+
+  // gauge
+  const v = s.overall;
+  document.getElementById('gaugeVal').textContent = v+'%';
+  // arc length 251 (PI*r where r≈80 ⇒ 251.3)
+  const offset = 251 - (v/100)*251;
+  setTimeout(()=>{document.getElementById('gaugePath').style.strokeDashoffset = offset},80);
+
+  const gv = document.getElementById('gaugeVal');
+  gv.style.color = v>=85?'#34d399':(v>=70?'#f4cf65':'#fb7185');
+
+  // recs
+  const recList = document.getElementById('recList');
+  recList.innerHTML='';
+  s.recs.forEach(r=>{
+    const el = document.createElement('div');
+    el.className = `rec ${r.k}`;
+    el.innerHTML = `<div class="ri">${r.i}</div><div><div class="rt">${r.t}</div><div class="rm">${r.m}</div></div>`;
+    recList.appendChild(el);
+  });
+}
+
+// ===== Step 4: render config =====
+function renderConfig(s){
+  const yaml = `<span class="c"># SortMate deployment config</span>
+<span class="c"># Generated by CategoryForge · ${new Date().toISOString().slice(0,10)}</span>
+
+<span class="k">client</span>: <span class="s">"${s===SAMPLES.retextilgent?'RetextilGent':(s===SAMPLES.texaid?'Texaid':'EcoTextile')}"</span>
+<span class="k">site_id</span>: <span class="s">"BE-GENT-01"</span>
+<span class="k">firmware</span>: <span class="s">"v3.4.2"</span>
+
+<span class="k">model</span>:
+  <span class="k">backbone</span>: <span class="s">"vit-b16-textile-v1.4"</span>
+  <span class="k">heads</span>:
+    - <span class="v">brand</span>
+    - <span class="v">defect</span>
+    - <span class="v">attribute</span>
+    - <span class="v">nir_fiber</span>
+  <span class="k">quantization</span>: <span class="s">"int8"</span>
+  <span class="k">target_latency_ms</span>: <span class="v">55</span>
+
+<span class="k">taxonomy</span>:
+  <span class="k">total_categories</span>: <span class="v">${s.catReadiness.length}</span>
+  <span class="k">coverage</span>: <span class="v">${s.coverage}%</span>
+  <span class="k">fallback</span>: <span class="s">"manual_review_queue"</span>
+
+<span class="k">routing</span>:
+  <span class="k">channels</span>:
+    - <span class="v">retail_tier_a</span>
+    - <span class="v">retail_tier_b</span>
+    - <span class="v">bulk_wholesale</span>
+    - <span class="v">vinted_premium</span>
+    - <span class="v">recycle_fiber</span>
+
+<span class="k">monitoring</span>:
+  <span class="k">drift_threshold_psi</span>: <span class="v">0.25</span>
+  <span class="k">ood_alert_pct</span>: <span class="v">5.0</span>
+  <span class="k">active_learning</span>: <span class="v">true</span>`;
+
+  const json = `{
+  <span class="k">"rules"</span>: [
+${s.catReadiness.slice(0,5).map(c=>`    {
+      <span class="k">"category"</span>: <span class="s">"${c.n}"</span>,
+      <span class="k">"min_confidence"</span>: <span class="v">0.75</span>,
+      <span class="k">"expected_f1"</span>: <span class="v">${c.acc.toFixed(2)}</span>,
+      <span class="k">"channel"</span>: <span class="s">"${c.acc>=0.9?'retail_tier_a':(c.acc>=0.8?'retail_tier_b':'wholesale')}"</span>,
+      <span class="k">"fallback"</span>: <span class="s">"manual_review"</span>
+    }`).join(',\n')}
+  ],
+  <span class="k">"defect_grading"</span>: {
+    <span class="k">"none"</span>: <span class="s">"grade_a"</span>,
+    <span class="k">"minor"</span>: <span class="s">"grade_b"</span>,
+    <span class="k">"major"</span>: <span class="s">"recycle"</span>
+  },
+  <span class="k">"nir_fiber_routing"</span>: {
+    <span class="k">"cotton_pure"</span>: <span class="s">"retail"</span>,
+    <span class="k">"cotton_blend"</span>: <span class="s">"retail"</span>,
+    <span class="k">"polyester_pure"</span>: <span class="s">"wholesale"</span>,
+    <span class="k">"mixed_unknown"</span>: <span class="s">"manual_review"</span>
+  }
+}`;
+
+  document.getElementById('yamlPre').innerHTML = yaml;
+  document.getElementById('jsonPre').innerHTML = json;
+}
+
+function copyTxt(which){
+  toast(`📋 ${which==='yaml'?'sortmate_config.yaml':'routing_rules.json'} copied to clipboard`);
+}
+
+function toast(msg){
+  const el=document.getElementById('toast');
+  document.getElementById('toastMsg').textContent = msg;
+  el.classList.add('show');
+  clearTimeout(window._t);
+  window._t = setTimeout(()=>el.classList.remove('show'),2300);
+}
+
+// drop hover (visual only)
+const drop = document.getElementById('drop');
+drop.ondragover = e=>{e.preventDefault();drop.classList.add('over')};
+drop.ondragleave = ()=>drop.classList.remove('over');
+drop.ondrop = e=>{e.preventDefault();drop.classList.remove('over');loadSample('retextilgent')};
+drop.onclick = e=>{
+  if(e.target.classList.contains('example-btn')) return;
+  loadSample('retextilgent');
+};
+</script>
+</body>
+</html>
