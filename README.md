@@ -1,4 +1,4 @@
-<img width="1920" height="1080" alt="category_forge_metrics_clean_1920x1080" src="https://github.com/user-attachments/assets/bb1819c4-7066-4f7b-8cce-3e689945b1cc" /># CategoryForge Onboard
+
 
 A small production-style **customer onboarding and configuration control plane** for an industrial garment-sorting CV system.
 
