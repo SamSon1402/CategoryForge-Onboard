@@ -1,0 +1,9 @@
+services:
+  category-forge:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      CATEGORY_FORGE_SIGNING_SECRET: local-demo-secret
+    volumes:
+      - ./runtime:/app/runtime

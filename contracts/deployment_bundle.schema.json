@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "CategoryForgeDeploymentBundle",
+  "type": "object",
+  "required": ["customer_id", "bundle_version", "taxonomy", "policy", "content_sha256"],
+  "properties": {
+    "customer_id": {"type": "string"},
+    "bundle_version": {"type": "integer", "minimum": 1},
+    "taxonomy": {"type": "object", "additionalProperties": {"type": "string"}},
+    "model_compatibility": {"type": "array", "items": {"type": "string"}},
+    "content_sha256": {"type": "string"},
+    "hmac_sha256": {"type": ["string", "null"]}
+  }
+}

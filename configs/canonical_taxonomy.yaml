@@ -1,0 +1,32 @@
+version: sortmate-demo-taxonomy-v3
+categories:
+  - name: t_shirt
+    aliases: [t-shirt, tshirt, tee, short sleeve top]
+    description: lightweight knitted top with short sleeves
+  - name: shirt
+    aliases: [button shirt, blouse, dress shirt]
+    description: woven or buttoned upper-body garment
+  - name: hoodie
+    aliases: [hooded sweatshirt, hooded jumper]
+    description: sweatshirt or jumper with hood
+  - name: sweater
+    aliases: [jumper, pullover, knitwear]
+    description: knitted warm upper-body garment
+  - name: jacket
+    aliases: [windbreaker, coat, outerwear]
+    description: outer-layer garment
+  - name: pants
+    aliases: [trousers, jeans, tracksuit bottoms, slacks]
+    description: lower-body garment with two legs
+  - name: shorts
+    aliases: [short trousers, bermuda]
+    description: short lower-body garment
+  - name: skirt
+    aliases: [mini skirt, midi skirt, maxi skirt]
+    description: lower-body garment without separate legs
+  - name: dress
+    aliases: [gown, one piece dress]
+    description: one-piece garment covering torso and lower body
+  - name: shoes
+    aliases: [sneakers, trainers, footwear]
+    description: footwear category

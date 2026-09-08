@@ -1,0 +1,9 @@
+[
+  {"garment_id":"g-001","source_category":"T-Shirts","predicted_category":"t_shirt","category_confidence":0.98,"grade":"A","grade_confidence":0.96,"estimated_value_eur":36,"nir_confidence":0.94,"ood_score":0.08,"actual_route":"premium_resale"},
+  {"garment_id":"g-002","source_category":"Tracksuit bottoms","predicted_category":"pants","category_confidence":0.94,"grade":"B","grade_confidence":0.92,"estimated_value_eur":14,"nir_confidence":0.91,"ood_score":0.11,"actual_route":"domestic_resale"},
+  {"garment_id":"g-003","source_category":"Wind-breaker","predicted_category":"jacket","category_confidence":0.91,"grade":"C","grade_confidence":0.86,"estimated_value_eur":4,"nir_confidence":0.95,"ood_score":0.17,"actual_route":"recycling"},
+  {"garment_id":"g-004","source_category":"Hooded Sweatshirt","predicted_category":"hoodie","category_confidence":0.89,"grade":"B","grade_confidence":0.89,"estimated_value_eur":18,"nir_confidence":0.88,"ood_score":0.13,"actual_route":"domestic_resale"},
+  {"garment_id":"g-005","source_category":"Denim trousers","predicted_category":"pants","category_confidence":0.97,"grade":"C","grade_confidence":0.90,"estimated_value_eur":7,"nir_confidence":0.93,"ood_score":0.10,"actual_route":"repair"},
+  {"garment_id":"g-006","source_category":"Ladies gown","predicted_category":"dress","category_confidence":0.93,"grade":"A","grade_confidence":0.91,"estimated_value_eur":28,"nir_confidence":0.90,"ood_score":0.09,"actual_route":"domestic_resale"},
+  {"garment_id":"g-007","source_category":"Mystery accessories","predicted_category":"unknown","category_confidence":0.41,"grade":"B","grade_confidence":0.81,"estimated_value_eur":9,"nir_confidence":0.72,"ood_score":0.81,"actual_route":"manual_review"}
+]

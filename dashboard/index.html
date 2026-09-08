@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>CategoryForge Onboard</title>
+<style>
+:root{--bg:#0b1220;--panel:#111c2e;--text:#e8f0f7;--muted:#8fa4b8;--teal:#35d0ba;--coral:#ff8066;--line:#24344b;--good:#55d68b;--warn:#ffcc66}
+*{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--text);font:15px/1.45 system-ui,sans-serif}.wrap{max-width:1120px;margin:auto;padding:32px}.top{display:flex;justify-content:space-between;align-items:center}.tag{font:12px ui-monospace,monospace;color:var(--teal);border:1px solid #245b59;padding:7px 10px;border-radius:999px}.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:28px 0}.step{padding:14px;background:var(--panel);border:1px solid var(--line);border-radius:14px}.step b{display:block;color:var(--teal)}.grid{display:grid;grid-template-columns:1.4fr 1fr;gap:18px}.card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:20px;margin-bottom:18px}table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:11px;border-bottom:1px solid var(--line)}th{color:var(--muted);font-size:12px}.score{font:700 42px ui-monospace,monospace;color:var(--good)}.bar{height:8px;background:#1d2a3d;border-radius:9px;overflow:hidden}.bar i{display:block;height:100%;background:var(--teal)}pre{background:#08101d;border:1px solid var(--line);padding:14px;border-radius:12px;color:#b7d8d4;overflow:auto}.review{color:var(--warn)}.auto{color:var(--good)}.unmapped{color:var(--coral)}@media(max-width:800px){.grid,.steps{grid-template-columns:1fr}}
+</style>
+</head>
+<body><div class="wrap">
+<div class="top"><div><h1>CategoryForge Onboard</h1><div style="color:var(--muted)">Customer taxonomy → policy → replay → signed edge config</div></div><span class="tag">CONTROL PLANE</span></div>
+<div class="steps"><div class="step"><b>01 INGEST</b>CSV / JSON</div><div class="step"><b>02 MAP</b>Customer → canonical taxonomy</div><div class="step"><b>03 VERIFY</b>Historical replay + readiness</div><div class="step"><b>04 DEPLOY</b>Shadow → canary → active</div></div>
+<div class="grid">
+<div>
+<div class="card"><h3>Texaid demo mapping</h3><table><thead><tr><th>CLIENT LABEL</th><th>CANONICAL</th><th>SCORE</th><th>DECISION</th></tr></thead><tbody>
+<tr><td>T-Shirts</td><td>t_shirt</td><td>.98</td><td class="auto">AUTO</td></tr>
+<tr><td>Tracksuit bottoms</td><td>pants</td><td>.93</td><td class="auto">AUTO</td></tr>
+<tr><td>Wind-breaker</td><td>jacket</td><td>.78</td><td class="auto">AUTO</td></tr>
+<tr><td>Ladies gown</td><td>dress</td><td>.61</td><td class="review">REVIEW</td></tr>
+<tr><td>Mystery accessories</td><td>—</td><td>.17</td><td class="unmapped">UNMAPPED</td></tr>
+</tbody></table></div>
+<div class="card"><h3>Config preview</h3><pre>customer: texaid-demo
+bundle_version: 42
+taxonomy_version: sortmate-demo-taxonomy-v3
+confidence:
+  category_min: 0.75
+  grade_min: 0.78
+  nir_min: 0.80
+routes:
+  - premium_resale
+  - domestic_resale
+  - repair
+  - recycling
+  - manual_review
+
+release: shadow → canary → active</pre></div>
+</div>
+<div>
+<div class="card"><div style="color:var(--muted)">DEPLOYMENT READINESS</div><div class="score">94%</div><p>Enough to enter shadow after the remaining review items are resolved.</p></div>
+<div class="card"><h3>Safety gates</h3><p>Taxonomy coverage</p><div class="bar"><i style="width:98%"></i></div><p>Historical route agreement</p><div class="bar"><i style="width:97%"></i></div><p>Auto-map precision</p><div class="bar"><i style="width:99%"></i></div><p style="color:var(--muted)">Config is hashed, optionally HMAC-signed, model-compatible, and rolled out through shadow/canary instead of pushed blindly.</p></div>
+</div></div></div></body></html>

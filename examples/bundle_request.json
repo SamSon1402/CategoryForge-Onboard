@@ -1,0 +1,10 @@
+{
+  "customer_id": "texaid-demo",
+  "bundle_version": 42,
+  "created_by": "sameer",
+  "mappings": {
+    "T-Shirts": "t_shirt",
+    "Tracksuit bottoms": "pants",
+    "Wind-breaker": "jacket"
+  }
+}

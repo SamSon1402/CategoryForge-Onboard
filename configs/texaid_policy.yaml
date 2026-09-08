@@ -1,0 +1,36 @@
+customer_id: texaid-demo
+policy_version: 7
+taxonomy_version: sortmate-demo-taxonomy-v3
+compatible_model_prefixes: [grader-rgb-0.9, grader-rgb-1.0]
+grades:
+  A:
+    max_hole_mm: 0
+    max_stain_area_pct: 0.2
+    max_defect_severity: 0.15
+  B:
+    max_hole_mm: 3
+    max_stain_area_pct: 1.0
+    max_defect_severity: 0.45
+  C:
+    max_hole_mm: 12
+    max_stain_area_pct: 5.0
+    max_defect_severity: 0.80
+routes:
+  - route: premium_resale
+    allowed_grades: [A]
+    min_value_eur: 30
+  - route: domestic_resale
+    allowed_grades: [A, B]
+    min_value_eur: 8
+  - route: repair
+    allowed_grades: [C]
+    min_value_eur: 6
+  - route: recycling
+    allowed_grades: [C]
+    max_value_eur: 6
+    min_fiber_confidence: 0.90
+confidence:
+  category_min: 0.75
+  grade_min: 0.78
+  nir_min: 0.80
+  ood_max: 0.65
